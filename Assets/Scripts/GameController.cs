@@ -4,9 +4,14 @@ public class GameController : MonoBehaviour
 {
     [SerializeField] private PreparationStage _preparationStage;
     [SerializeField] private UnitMover _unitMover;
+    [SerializeField] private GridGenerator _gridGenerator;
 
-    private void Awake() =>
+    private void Awake()
+    {
+        _gridGenerator.GenerateGrid();
+
         StartPraparationStage();
+    }
 
     private void OnEnable()
     {

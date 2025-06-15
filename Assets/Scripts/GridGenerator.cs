@@ -9,7 +9,7 @@ public class GridGenerator : MonoBehaviour
 
     private Vector3 CellSize => _prefab.GetComponent<MeshRenderer>().bounds.size;
 
-    private void GenerateGrid()
+    public void GenerateGrid()
     {
         for (int x = 0; x < _gridSize.x; x++)
         {
