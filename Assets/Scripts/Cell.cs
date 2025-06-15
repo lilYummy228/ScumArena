@@ -9,7 +9,7 @@ public class Cell : MonoBehaviour
     private MeshRenderer _meshRenderer;
     private Material _currentMaterial;
 
-    private void Awake() =>
+    private void Start() =>
         _meshRenderer = GetComponent<MeshRenderer>();
 
     public void ChangeMaterial()

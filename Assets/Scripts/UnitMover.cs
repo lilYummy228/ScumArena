@@ -1,18 +1,31 @@
+using System;
+using System.Collections;
 using UnityEngine;
 
 public class UnitMover : MonoBehaviour
 {
-    [SerializeField] private Transform _unit;
-    [SerializeField] private PreparationStage _preparationStage;
+    [SerializeField] private float _speed;
 
-    private void OnEnable() =>
-        _preparationStage.PreparationStageFinished += MoveTo;
+    private WaitForFixedUpdate _waitForFixedUpdate = new WaitForFixedUpdate();
 
-    private void OnDisable() =>
-        _preparationStage.PreparationStageFinished -= MoveTo;
+    public event Action Moved;
 
-    public void MoveTo(Cell cell)
+    public void MoveTo(Cell cell) =>
+        StartCoroutine(SmoothlyMove(cell));
+
+    public IEnumerator SmoothlyMove(Cell cell)
     {
-        _unit.position = new Vector3(cell.transform.position.x, _unit.position.y, cell.transform.position.z);
+        Vector3 targetPosition = new Vector3(cell.transform.position.x, transform.position.y, cell.transform.position.z);
+
+        while (transform.position != targetPosition)
+        {
+            transform.position = Vector3.MoveTowards(transform.position, targetPosition, _speed * Time.deltaTime);
+
+            yield return _waitForFixedUpdate;
+        }
+
+        cell.ChangeMaterial();
+
+        Moved?.Invoke();
     }
 }

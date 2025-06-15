@@ -3,39 +3,46 @@ using UnityEngine;
 
 public class CellSelector : MonoBehaviour
 {
+    private Coroutine _selectionCoroutine;
+    private WaitUntil _waitUntil = new WaitUntil(() => Input.GetMouseButtonDown(0));
+
     public Cell CurrentCell { get; private set; }
 
-    private WaitForFixedUpdate _waitForFixedUpdate = new WaitForFixedUpdate();
-
     public void StartSelection() =>
-        StartCoroutine(Select());
+       _selectionCoroutine = StartCoroutine(Select());
+
+    public void StopSelection()
+    {
+        if (_selectionCoroutine != null)
+            StopCoroutine(_selectionCoroutine);
+    }
+
+    public void ClearCellSelection() =>
+        CurrentCell = null;
 
     private IEnumerator Select()
     {
         while (enabled)
         {
-            if (Input.GetMouseButtonDown(0))
+            yield return _waitUntil;
+
+            if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out RaycastHit hit))
             {
-                if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out RaycastHit hit))
+                if (hit.collider.gameObject.TryGetComponent(out Cell cell))
                 {
-                    if (hit.collider.gameObject.TryGetComponent(out Cell cell))
+                    if (CurrentCell == null)
                     {
-                        if (CurrentCell == null)
-                        {
-                            cell.ChangeMaterial();
-                            CurrentCell = cell;
-                        }
-                        else
-                        {
-                            CurrentCell.ChangeMaterial();
-                            CurrentCell = cell;
-                            CurrentCell.ChangeMaterial();
-                        }
+                        cell.ChangeMaterial();
+                        CurrentCell = cell;
+                    }
+                    else
+                    {
+                        CurrentCell.ChangeMaterial();
+                        CurrentCell = cell;
+                        CurrentCell.ChangeMaterial();
                     }
                 }
             }
-
-            yield return _waitForFixedUpdate;
         }
     }
 }

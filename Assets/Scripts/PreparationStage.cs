@@ -11,11 +11,12 @@ public class PreparationStage : MonoBehaviour
 
     public event Action<Cell> PreparationStageFinished;
 
-    public void StartPreparationStage()
+    public void Prepare()
     {
         _wait = new WaitForSeconds(_preparationTime);
 
         StartCoroutine(CountPreparationTime());
+
         _cellSelector.StartSelection();
 
         Debug.Log("Praparation Stage Started");
@@ -25,7 +26,11 @@ public class PreparationStage : MonoBehaviour
     {
         yield return _wait;
 
+        _cellSelector.StopSelection();
+
         PreparationStageFinished?.Invoke(_cellSelector.CurrentCell);
+
+        _cellSelector.ClearCellSelection();
 
         Debug.Log("Praparation Stage Finished");
     }
