@@ -4,11 +4,14 @@ using UnityEngine;
 
 public class UnitMover : MonoBehaviour
 {
-    [SerializeField] private float _speed;
+    [SerializeField] private float _speed = 2;
+    [SerializeField] private int _range = 2;
 
     private WaitForFixedUpdate _waitForFixedUpdate = new WaitForFixedUpdate();
 
     public event Action Moved;
+
+    public int Range => _range;
 
     public void MoveTo(Cell cell) =>
         StartCoroutine(SmoothlyMove(cell));
@@ -23,8 +26,6 @@ public class UnitMover : MonoBehaviour
 
             yield return _waitForFixedUpdate;
         }
-
-        cell.ChangeMaterial();
 
         Moved?.Invoke();
     }

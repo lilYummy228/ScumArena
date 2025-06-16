@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class PreparationStage : MonoBehaviour
@@ -11,22 +12,27 @@ public class PreparationStage : MonoBehaviour
 
     public event Action<Cell> PreparationStageFinished;
 
-    public void Prepare()
+    public void Prepare(Unit player, IReadOnlyList<Cell> grid)
     {
+        List<Cell> rangeCells = new List<Cell>();
         _wait = new WaitForSeconds(_preparationTime);
 
-        StartCoroutine(CountPreparationTime());
+        foreach (Cell cell in grid)
+            if (Mathf.Abs(cell.Coordinates.x  - player.Coordinate.x) <= player.UnitMover.Range &&
+                Mathf.Abs(cell.Coordinates.y - player.Coordinate.y) <= player.UnitMover.Range)
+                rangeCells.Add(cell);
 
-        _cellSelector.StartSelection();
+        StartCoroutine(CountPreparationTime(rangeCells));
+        _cellSelector.StartSelection(rangeCells);
 
         Debug.Log("Praparation Stage Started");
     }
 
-    private IEnumerator CountPreparationTime()
+    private IEnumerator CountPreparationTime(IReadOnlyList<Cell> rangeCells)
     {
         yield return _wait;
 
-        _cellSelector.StopSelection();
+        _cellSelector.StopSelection(rangeCells);
 
         PreparationStageFinished?.Invoke(_cellSelector.CurrentCell);
 

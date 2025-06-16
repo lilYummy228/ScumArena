@@ -2,27 +2,21 @@ using UnityEngine;
 
 [RequireComponent(typeof(MeshRenderer))]
 public class Cell : MonoBehaviour
-{
-    [SerializeField] private Material _defaultMaterial;
-    [SerializeField] private Material _selectedMaterial;
-
+{   
     private MeshRenderer _meshRenderer;
     private Material _currentMaterial;
 
-    private void Start() =>
+    public Vector2Int Coordinates { get; private set; }
+
+    private void Awake() =>
         _meshRenderer = GetComponent<MeshRenderer>();
 
-    public void ChangeMaterial()
+    public void SetCoordinates(int x, int y) =>
+        Coordinates = new Vector2Int(x, y);
+
+    public void SetMaterial(Material material)
     {
-        if (_currentMaterial != _selectedMaterial)
-        {
-            _meshRenderer.material = _selectedMaterial;
-            _currentMaterial = _selectedMaterial;
-        }
-        else
-        {
-            _meshRenderer.material = _defaultMaterial;
-            _currentMaterial = _defaultMaterial;
-        }
+        _meshRenderer.material = material;
+        _currentMaterial = material;
     }
 }
