@@ -21,7 +21,9 @@ public class Spawner : MonoBehaviour
                 unit.SetCoordinates(randomPoint.x, randomPoint.y);
 
                 UnitSpawned?.Invoke(unit);
+
                 Debug.Log("Unit Spawned");
+
                 break;
             }
         }  

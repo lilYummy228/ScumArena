@@ -45,8 +45,11 @@ public class GameController : MonoBehaviour
     private void SpawnUnits() =>
         _spawner.SpawnUnit(_grid.CellsInGrid, _prefab);
 
-    private void StartPreparationStage() =>
-        _preparationStage.Prepare(_player, _grid.CellsInGrid);
+    private void StartPreparationStage()
+    {
+        if (_player != null)
+            _preparationStage.Prepare(_player, _grid.CellsInGrid);
+    }
 
     private void StartMovingStage(Cell cell) =>
         _movementStage.MoveTo(_player, cell);
