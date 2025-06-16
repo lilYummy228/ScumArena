@@ -5,9 +5,9 @@ public class GameController : MonoBehaviour
     [SerializeField] private PreparationStage _preparationStage;
     [SerializeField] private ActionStage _actionStage;
     [SerializeField] private MovementStage _movementStage;
-    [SerializeField] private Unit _prefab;
     [SerializeField] private Grid _grid;
     [SerializeField] private Spawner _spawner;
+    [SerializeField] private Unit[] _prefabs;
 
     private Unit _player;
 
@@ -43,7 +43,7 @@ public class GameController : MonoBehaviour
         _actionStage.StartUseActionAbilities();
 
     private void SpawnUnits() =>
-        _spawner.SpawnUnit(_grid.CellsInGrid, _prefab);
+        _spawner.SpawnUnits(_grid.CellsInGrid, _prefabs);
 
     private void StartPreparationStage()
     {

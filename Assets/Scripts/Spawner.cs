@@ -7,25 +7,51 @@ public class Spawner : MonoBehaviour
     [SerializeField] private Vector2Int[] _spawnPoints;
     [SerializeField] private Transform _parent;
 
+    private Unit _player;
+
     public event Action<Unit> UnitSpawned;
 
-    public void SpawnUnit(IReadOnlyList<Cell> grid, Unit prefab)
+    public void SpawnUnits(IReadOnlyList<Cell> grid, Unit[] units)
     {
-        Vector2Int randomPoint = _spawnPoints[UnityEngine.Random.Range(0, _spawnPoints.Length - 1)];
+        Shuffle();
 
-        foreach (Cell cell in grid)
+        int index = default;
+
+        foreach (Vector2Int spawnPoint in _spawnPoints)
         {
-            if (cell.Coordinates == randomPoint)
+            foreach (Cell cell in grid)
             {
-                Unit unit = Instantiate(prefab, new Vector3(cell.transform.position.x, prefab.transform.position.y, cell.transform.position.z), Quaternion.identity, _parent);
-                unit.SetCoordinates(randomPoint.x, randomPoint.y);
+                if (cell.Coordinates == spawnPoint)
+                {
+                    Unit unit = Instantiate(units[index],
+                        new Vector3(cell.transform.position.x, units[index].transform.position.y, cell.transform.position.z), Quaternion.identity, _parent);
 
-                UnitSpawned?.Invoke(unit);
+                    unit.SetCoordinates(spawnPoint.x, spawnPoint.y);
 
-                Debug.Log("Unit Spawned");
+                    if (index == default)
+                        _player = unit;
 
-                break;
+                    index++;
+
+                    break;
+                }
             }
-        }  
+        }
+
+        Debug.Log("Units Spawned");
+
+        UnitSpawned?.Invoke(_player);
+    }
+
+    private void Shuffle()
+    {
+        for (int i = 0; i < _spawnPoints.Length - 1; i++)
+        {
+            int randomIndex = UnityEngine.Random.Range(0, _spawnPoints.Length - 1);
+
+            Vector2Int tempValue = _spawnPoints[randomIndex];
+            _spawnPoints[randomIndex] = _spawnPoints[i];
+            _spawnPoints[i] = tempValue;
+        }
     }
 }
