@@ -8,13 +8,16 @@ public class CellSelector : MonoBehaviour
     [SerializeField] private Material _selectedMaterial;
     [SerializeField] private Material _rangeMaterial;
 
+    private Cell _startCell;
     private Coroutine _selectionCoroutine;
     private WaitUntil _waitUntil = new WaitUntil(() => Input.GetMouseButtonDown(0));
 
     public Cell CurrentCell { get; private set; }
 
-    public void StartSelection(IReadOnlyList<Cell> cells)
+    public void StartSelection(IReadOnlyList<Cell> cells, Cell startCell)
     {
+        _startCell = startCell;
+
         foreach (Cell rangeCell in cells)
             rangeCell.SetMaterial(_rangeMaterial);
 
@@ -23,6 +26,9 @@ public class CellSelector : MonoBehaviour
 
     public void StopSelection(IReadOnlyList<Cell> rangeCells)
     {
+        if (CurrentCell == null)
+            CurrentCell = _startCell;
+
         foreach (Cell rangeCell in rangeCells)
             rangeCell.SetMaterial(_defaultMaterial);
 

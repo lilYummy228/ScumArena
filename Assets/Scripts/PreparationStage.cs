@@ -15,17 +15,29 @@ public class PreparationStage : MonoBehaviour
     public void Prepare(Unit player, IReadOnlyList<Cell> grid)
     {
         List<Cell> rangeCells = new List<Cell>();
+        Cell startCell = null;
+
         _wait = new WaitForSeconds(_preparationTime);
 
         foreach (Cell cell in grid)
-            if (Mathf.Abs(cell.Coordinates.x  - player.Coordinate.x) <= player.UnitMover.Range &&
-                Mathf.Abs(cell.Coordinates.y - player.Coordinate.y) <= player.UnitMover.Range)
+        {
+            if (Mathf.Abs(cell.Coordinates.x - player.Coordinate.x) <= player.MovementRange &&
+                Mathf.Abs(cell.Coordinates.y - player.Coordinate.y) <= player.MovementRange)
+            {
                 rangeCells.Add(cell);
+            }
+
+            if (cell.Coordinates.x == player.Coordinate.x &&
+                cell.Coordinates.y == player.Coordinate.y)
+            {
+                startCell = cell;
+            }
+        }
 
         StartCoroutine(CountPreparationTime(rangeCells));
-        _cellSelector.StartSelection(rangeCells);
+        _cellSelector.StartSelection(rangeCells, startCell);
 
-        Debug.Log("Praparation Stage Started");
+        Debug.Log("Preparation Stage Started");
     }
 
     private IEnumerator CountPreparationTime(IReadOnlyList<Cell> rangeCells)
@@ -38,6 +50,6 @@ public class PreparationStage : MonoBehaviour
 
         _cellSelector.ClearCellSelection();
 
-        Debug.Log("Praparation Stage Finished");
+        Debug.Log("Preparation Stage Finished");
     }
 }

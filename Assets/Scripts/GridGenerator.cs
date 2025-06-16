@@ -34,5 +34,7 @@ public class GridGenerator : MonoBehaviour
         }
 
         GridGenerated?.Invoke(cellInGrid);
+
+        Debug.Log("Grid Generated");
     }
 }
