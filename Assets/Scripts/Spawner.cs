@@ -7,15 +7,15 @@ public class Spawner : MonoBehaviour
     [SerializeField] private Vector2Int[] _spawnPoints;
     [SerializeField] private Transform _parent;
 
-    private Unit _player;
+    private List<Unit> _spawnedUnits = new List<Unit>();
 
-    public event Action<Unit> UnitSpawned;
+    public event Action<List<Unit>> UnitSpawned;
 
     public void SpawnUnits(IReadOnlyList<Cell> grid, Unit[] units)
     {
         Shuffle();
 
-        int index = default;
+        int index = 0;
 
         foreach (Vector2Int spawnPoint in _spawnPoints)
         {
@@ -28,8 +28,7 @@ public class Spawner : MonoBehaviour
 
                     unit.SetCoordinates(spawnPoint.x, spawnPoint.y);
 
-                    if (index == default)
-                        _player = unit;
+                    _spawnedUnits.Add(unit);
 
                     index++;
 
@@ -40,7 +39,7 @@ public class Spawner : MonoBehaviour
 
         Debug.Log("Units Spawned");
 
-        UnitSpawned?.Invoke(_player);
+        UnitSpawned?.Invoke(_spawnedUnits);
     }
 
     private void Shuffle()

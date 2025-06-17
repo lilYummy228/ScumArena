@@ -8,38 +8,47 @@ public class CellSelector : MonoBehaviour
     [SerializeField] private Material _selectedMaterial;
     [SerializeField] private Material _rangeMaterial;
 
-    private Cell _startCell;
+    private Cell _playerStartCell;
     private Coroutine _selectionCoroutine;
+    private Dictionary<Unit, Cell> _unitsChosenCell = new Dictionary<Unit, Cell>();
     private WaitUntil _waitUntil = new WaitUntil(() => Input.GetMouseButtonDown(0));
+
+    public IReadOnlyDictionary<Unit, Cell> UnitsChosenCell => _unitsChosenCell;
 
     public Cell CurrentCell { get; private set; }
 
-    public void StartSelection(IReadOnlyList<Cell> cells, Cell startCell)
+    public void StartSelection(IReadOnlyDictionary<Unit, List<Cell>> unitRangeCells, Cell playerStartCell, Unit playerUnit)
     {
-        _startCell = startCell;
+        _unitsChosenCell.Clear();
 
-        foreach (Cell rangeCell in cells)
+        _playerStartCell = playerStartCell;
+
+        foreach (Cell rangeCell in unitRangeCells[playerUnit])
             rangeCell.SetMaterial(_rangeMaterial);
 
-        _selectionCoroutine = StartCoroutine(Select(cells));
+        _selectionCoroutine = StartCoroutine(PlayerSelect(unitRangeCells[playerUnit]));
     }
 
-    public void StopSelection(IReadOnlyList<Cell> rangeCells)
+    public void StopSelection(IReadOnlyDictionary<Unit, List<Cell>> unitRangeCells, Unit playerUnit)
     {
         if (CurrentCell == null)
-            CurrentCell = _startCell;
+            CurrentCell = _playerStartCell;
 
-        foreach (Cell rangeCell in rangeCells)
+        foreach (Cell rangeCell in unitRangeCells[playerUnit])
             rangeCell.SetMaterial(_defaultMaterial);
 
         if (_selectionCoroutine != null)
             StopCoroutine(_selectionCoroutine);
+
+        _unitsChosenCell.Add(playerUnit, CurrentCell);
+
+        EnemiesSelect(unitRangeCells, playerUnit);
     }
 
     public void ClearCellSelection() =>
         CurrentCell = null;
 
-    private IEnumerator Select(IReadOnlyList<Cell> rangeCells)
+    private IEnumerator PlayerSelect(IReadOnlyList<Cell> rangeCells)
     {
         while (enabled)
         {
@@ -50,7 +59,7 @@ public class CellSelector : MonoBehaviour
                 if (hit.collider.gameObject.TryGetComponent(out Cell cell))
                 {
                     foreach (Cell rangeCell in rangeCells)
-                    {                       
+                    {
                         if (rangeCell == cell)
                         {
                             if (CurrentCell == null)
@@ -71,6 +80,19 @@ public class CellSelector : MonoBehaviour
                     }
                 }
             }
+        }
+    }
+
+    private void EnemiesSelect(IReadOnlyDictionary<Unit, List<Cell>> unitRangeCells, Unit playerUnit)
+    {
+        foreach (Unit unit in unitRangeCells.Keys)
+        {
+            if (unit == playerUnit)
+                continue;
+
+            int randomCellIndex = Random.Range(0, unitRangeCells[unit].Count);
+
+            _unitsChosenCell.Add(unit, unitRangeCells[unit][randomCellIndex]);
         }
     }
 }

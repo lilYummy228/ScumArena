@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class GameController : MonoBehaviour
@@ -9,7 +10,7 @@ public class GameController : MonoBehaviour
     [SerializeField] private Spawner _spawner;
     [SerializeField] private Unit[] _prefabs;
 
-    private Unit _player;
+    private List<Unit> _units;
 
     private void Start() =>
         _grid.GridGenerator.GenerateGrid();
@@ -17,7 +18,7 @@ public class GameController : MonoBehaviour
     private void OnEnable()
     {
         _grid.GridSet += SpawnUnits;
-        _spawner.UnitSpawned += SetPlayer;
+        _spawner.UnitSpawned += SetUnits;
         _preparationStage.PreparationStageFinished += StartMovingStage;
         _movementStage.MovementStageFinished += StartActionStage;
         _actionStage.ActionStageFinished += StartPreparationStage;
@@ -26,15 +27,15 @@ public class GameController : MonoBehaviour
     private void OnDisable()
     {
         _grid.GridSet -= SpawnUnits;
-        _spawner.UnitSpawned -= SetPlayer;
+        _spawner.UnitSpawned -= SetUnits;
         _preparationStage.PreparationStageFinished -= StartMovingStage;
         _movementStage.MovementStageFinished -= StartActionStage;
         _actionStage.ActionStageFinished -= StartPreparationStage;
     }
 
-    private void SetPlayer(Unit player)
+    private void SetUnits(List<Unit> units)
     {
-        _player = player;
+        _units = units;
 
         StartPreparationStage();
     }
@@ -45,12 +46,9 @@ public class GameController : MonoBehaviour
     private void SpawnUnits() =>
         _spawner.SpawnUnits(_grid.CellsInGrid, _prefabs);
 
-    private void StartPreparationStage()
-    {
-        if (_player != null)
-            _preparationStage.Prepare(_player, _grid.CellsInGrid);
-    }
+    private void StartPreparationStage() =>
+        _preparationStage.Prepare(_units, _grid.CellsInGrid);
 
-    private void StartMovingStage(Cell cell) =>
-        _movementStage.MoveTo(_player, cell);
+    private void StartMovingStage(IReadOnlyDictionary<Unit, Cell> unitsCell) =>
+        _movementStage.MoveTo(unitsCell);
 }
