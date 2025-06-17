@@ -14,8 +14,7 @@ public class PreparationStage : MonoBehaviour
 
     public void Prepare(IReadOnlyList<Unit> units, IReadOnlyList<Cell> grid)
     {
-        Dictionary<Unit, List<Cell>> unitRangeCells = new Dictionary<Unit, List<Cell>>();
-        List<Cell> rangeCells = new List<Cell>();
+        Dictionary<Unit, List<Cell>> unitRangeCells = new Dictionary<Unit, List<Cell>>();        
         Cell playerStartCell = null;
         Unit playerUnit = null;
 
@@ -23,13 +22,12 @@ public class PreparationStage : MonoBehaviour
 
         for (int i = 0; i < units.Count; i++)
         {
-            rangeCells.Clear();
+            List<Cell> rangeCells = new List<Cell>();
 
             foreach (Cell cell in grid)
             {
-                //if (Mathf.Abs(cell.Coordinates.x - units[i].Coordinate.x) <= units[i].MovementRange &&
-                //    Mathf.Abs(cell.Coordinates.y - units[i].Coordinate.y) <= units[i].MovementRange)
-                if (Mathf.Abs((units[i].Coordinate - cell.Coordinates).x) <= units[i].MovementRange && Mathf.Abs((units[i].Coordinate - cell.Coordinates).y) <= units[i].MovementRange)
+                if (Mathf.Abs((units[i].Coordinate - cell.Coordinates).x) <= units[i].MovementRange &&
+                    Mathf.Abs((units[i].Coordinate - cell.Coordinates).y) <= units[i].MovementRange)
                     rangeCells.Add(cell);
 
                 if (i == 0)
