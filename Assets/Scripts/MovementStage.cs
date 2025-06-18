@@ -5,28 +5,24 @@ using UnityEngine;
 
 public class MovementStage : MonoBehaviour
 {
-    [SerializeField] private float _speed = 2f;
-
-    private WaitForFixedUpdate _waitForFixedUpdate = new WaitForFixedUpdate();
-    private float _timeToMove = 4f;
+    private readonly float _movingTime = 2f;
+    private readonly WaitForFixedUpdate _waitForFixedUpdate = new WaitForFixedUpdate();
 
     public event Action MovementStageFinished;
 
-    private WaitForSeconds WaitForMoving => new WaitForSeconds(_timeToMove);
+    private WaitForSeconds WaitForMoving => new WaitForSeconds(_movingTime);
 
     public void MoveTo(IReadOnlyDictionary<Unit, Cell> unitsCell)
     {
         Debug.Log("Movement Stage Started");
 
-        bool[] isMoved = new bool[unitsCell.Count];
-
         foreach (KeyValuePair<Unit, Cell> unitCellPair in unitsCell)
             StartCoroutine(SmoothlyMove(unitCellPair));
 
-        StartCoroutine(AwaitMovement());
+        StartCoroutine(AwaitMovementFinish());
     }
 
-    private IEnumerator AwaitMovement()
+    private IEnumerator AwaitMovementFinish()
     {
         yield return WaitForMoving;
 
@@ -38,10 +34,12 @@ public class MovementStage : MonoBehaviour
     private IEnumerator SmoothlyMove(KeyValuePair<Unit, Cell> unitCellPair)
     {
         Vector3 targetPosition = new Vector3(unitCellPair.Value.transform.position.x, unitCellPair.Key.transform.position.y, unitCellPair.Value.transform.position.z);
+        float distance = (targetPosition - unitCellPair.Key.transform.position).magnitude;
+        float speed = distance / _movingTime;
 
         while (unitCellPair.Key.transform.position != targetPosition)
         {
-            unitCellPair.Key.transform.position = Vector3.MoveTowards(unitCellPair.Key.transform.position, targetPosition, _speed * Time.deltaTime);
+            unitCellPair.Key.transform.position = Vector3.MoveTowards(unitCellPair.Key.transform.position, targetPosition, speed * Time.deltaTime);
             yield return _waitForFixedUpdate;
         }
 

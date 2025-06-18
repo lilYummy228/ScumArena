@@ -8,9 +8,9 @@ public class CellSelector : MonoBehaviour
     [SerializeField] private Material _selectedMaterial;
     [SerializeField] private Material _rangeMaterial;
 
+    private readonly Dictionary<Unit, Cell> _unitsChosenCell = new Dictionary<Unit, Cell>();
     private Cell _playerStartCell;
     private Coroutine _selectionCoroutine;
-    private Dictionary<Unit, Cell> _unitsChosenCell = new Dictionary<Unit, Cell>();
     private WaitUntil _waitUntil = new WaitUntil(() => Input.GetMouseButtonDown(0));
 
     public IReadOnlyDictionary<Unit, Cell> UnitsChosenCell => _unitsChosenCell;

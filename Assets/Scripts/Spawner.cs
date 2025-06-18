@@ -7,7 +7,7 @@ public class Spawner : MonoBehaviour
     [SerializeField] private Vector2Int[] _spawnPoints;
     [SerializeField] private Transform _parent;
 
-    private List<Unit> _spawnedUnits = new List<Unit>();
+    private readonly List<Unit> _spawnedUnits = new List<Unit>();
 
     public event Action<List<Unit>> UnitSpawned;
 
