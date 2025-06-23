@@ -983,10 +983,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _spawnPoints:
-  - {x: 0, y: 1}
-  - {x: 4, y: 0}
-  - {x: 8, y: 0}
-  - {x: 12, y: 1}
+  - {fileID: 1544431651}
+  - {fileID: 866939681}
+  - {fileID: 237063284}
+  - {fileID: 64760833}
   _parent: {fileID: 158098789}
 --- !u!4 &158098789
 Transform:

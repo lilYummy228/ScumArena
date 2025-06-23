@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Spawner : MonoBehaviour
 {
-    [SerializeField] private Vector2Int[] _spawnPoints;
+    [SerializeField] private Cell[] _spawnPoints;
     [SerializeField] private Transform _parent;
 
     private readonly List<Unit> _spawnedUnits = new List<Unit>();
@@ -17,16 +17,16 @@ public class Spawner : MonoBehaviour
 
         int index = 0;
 
-        foreach (Vector2Int spawnPoint in _spawnPoints)
+        foreach (Cell spawnPoint in _spawnPoints)
         {
             foreach (Cell cell in grid)
             {
-                if (cell.Coordinates == spawnPoint)
+                if (cell == spawnPoint)
                 {
                     Unit unit = Instantiate(units[index],
                         new Vector3(cell.transform.position.x, units[index].transform.position.y, cell.transform.position.z), Quaternion.identity, _parent);
 
-                    unit.SetCoordinates(spawnPoint.x, spawnPoint.y);
+                    unit.SetCoordinates(spawnPoint.Coordinates.x, spawnPoint.Coordinates.y);
 
                     _spawnedUnits.Add(unit);
 
@@ -48,7 +48,7 @@ public class Spawner : MonoBehaviour
         {
             int randomIndex = UnityEngine.Random.Range(0, _spawnPoints.Length - 1);
 
-            Vector2Int tempValue = _spawnPoints[randomIndex];
+            Cell tempValue = _spawnPoints[randomIndex];
             _spawnPoints[randomIndex] = _spawnPoints[i];
             _spawnPoints[i] = tempValue;
         }
