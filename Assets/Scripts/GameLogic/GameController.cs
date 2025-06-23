@@ -13,11 +13,10 @@ public class GameController : MonoBehaviour
     private List<Unit> _units;
 
     private void Start() =>
-        _grid.GridGenerator.GenerateGrid();
+        SpawnUnits();
 
     private void OnEnable()
     {
-        _grid.GridSet += SpawnUnits;
         _spawner.UnitSpawned += SetUnits;
         _preparationStage.PreparationStageFinished += StartMovingStage;
         _movementStage.MovementStageFinished += StartActionStage;
@@ -26,7 +25,6 @@ public class GameController : MonoBehaviour
 
     private void OnDisable()
     {
-        _grid.GridSet -= SpawnUnits;
         _spawner.UnitSpawned -= SetUnits;
         _preparationStage.PreparationStageFinished -= StartMovingStage;
         _movementStage.MovementStageFinished -= StartActionStage;
