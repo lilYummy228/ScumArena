@@ -10,7 +10,6 @@ GameObject:
   m_Component:
   - component: {fileID: 6794370083028390496}
   - component: {fileID: 1388188218201325744}
-  - component: {fileID: -6278228215840865256}
   m_Layer: 0
   m_Name: Rage
   m_TagString: Untagged
@@ -85,16 +84,3 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &-6278228215840865256
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3113103125352083797}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a517f38ca8bc3384b91706563d69efff, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _chance: 30
