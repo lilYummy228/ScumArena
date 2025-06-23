@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: Healing
   m_EditorClassIdentifier: 
   _name: Healing
-  _icon: {fileID: 21300000, guid: 49e856d7e21e6d2489043306ef4fb245, type: 3}
+  _icon: {fileID: 21300000, guid: 94b373981080caa4ea995fbadd0eefb9, type: 3}
   _healthValueChange: 25
   _duration: 0
