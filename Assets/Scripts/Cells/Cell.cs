@@ -7,8 +7,10 @@ public class Cell : MonoBehaviour
 
     private MeshRenderer _meshRenderer;
     private Material _currentMaterial;
+    private Ability _ability;
 
     public Vector2Int Coordinates => _coordinates;
+    public Ability Ability => _ability;
 
     private void Awake() =>
         _meshRenderer = GetComponent<MeshRenderer>();
@@ -20,5 +22,10 @@ public class Cell : MonoBehaviour
     {
         _meshRenderer.material = material;
         _currentMaterial = material;
+    }
+
+    public void SetAbility(Ability ability)
+    {
+        _ability = ability;
     }
 }

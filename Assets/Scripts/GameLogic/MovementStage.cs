@@ -26,9 +26,9 @@ public class MovementStage : MonoBehaviour
     {
         yield return WaitForMoving;
 
-        MovementStageFinished?.Invoke();
-
         Debug.Log("Movement Stage Finished");
+
+        MovementStageFinished?.Invoke();
     }
 
     private IEnumerator SmoothlyMove(KeyValuePair<Unit, Cell> unitCellPair)
