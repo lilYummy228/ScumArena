@@ -11872,7 +11872,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _availableAbilities: []
-  _grid: {fileID: 0}
+  _grid: {fileID: 2011020983}
 --- !u!1 &2129730198
 GameObject:
   m_ObjectHideFlags: 0
